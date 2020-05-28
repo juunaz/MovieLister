@@ -9,20 +9,8 @@ class Movie {
 // UI Class: Handles everything UI related
 class UI {
     static displayMovies(){
-        const StoredMovies = [
-            {
-                title: 'Leffa 1',
-                director: 'Director 1',
-                isan: '11111'
-            },
-            {
-                title: 'Leffa 2',
-                director: 'Director 2',
-                isan: '22222'
-            }
-        ];
 
-        const movies = StoredMovies;
+        const movies = Store.getMovies();
 
         movies.forEach((movie) => UI.addMovieToList(movie));
     }
@@ -58,37 +46,38 @@ class UI {
         setTimeout(() => document.querySelector(".alert").remove(), 2500);
     }
 }
-/* // Store class: LocalStorage
+// Store class: LocalStorage
 class Store {
-    static getMovies() {
+    static getMovies(){
       let movies;
       if(localStorage.getItem('movies') === null) {
         movies = [];
       } else {
         movies = JSON.parse(localStorage.getItem('movies'));
       }
-  
+
       return movies;
-    }
-  
-    static addMovie(movie) {
+    } 
+
+    static addMovie(movie){
       const movies = Store.getMovies();
+
       movies.push(movie);
+
       localStorage.setItem('movies', JSON.stringify(movies));
     }
-  
-    static removeMovie(isan) {
+    static removeMovie(isan){
       const movies = Store.getMovies();
-  
+
       movies.forEach((movie, index) => {
         if(movie.isan === isan) {
           movies.splice(index, 1);
         }
       });
-  
+
       localStorage.setItem('movies', JSON.stringify(movies));
     }
-  } */
+}
 
 // Event: Display movies
 document.addEventListener("DOMContentLoaded", UI.displayMovies);
@@ -108,8 +97,11 @@ document.querySelector("#movie-form").addEventListener('submit', (e) => {
         // Instantiate a movie
         const movie = new Movie(title, director, isan);
 
-        //Add movie to the list
+        //Add movie to UI
         UI.addMovieToList(movie);
+
+        //Add movie to the store
+        Store.addMovie(movie);
 
         //Movie added "alert"
         UI.showAlert('Movie added', 'success');
@@ -121,5 +113,9 @@ document.querySelector("#movie-form").addEventListener('submit', (e) => {
 
 // Event: Remove a movie
 document.querySelector("#movie-list").addEventListener("click", (e) => {
+  //Remove movie from UI
     UI.deleteMovie(e.target);
+
+  //Remove book from the store
+    Store.removeMovie(e.target.parentElement.previousElementSibling.textContent);
 });
