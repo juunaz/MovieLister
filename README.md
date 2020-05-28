@@ -1,2 +1,4 @@
 #MyMovieLister App
-Added readme.
+
+HTML, CSS
+JavaScript
